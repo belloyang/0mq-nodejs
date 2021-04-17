@@ -4,7 +4,9 @@
   "main": "main.js",
   "license": "MIT",
   "scripts": {
-    "start": "node src/main.js"
+    "start": "node src/main.js",
+    "server": "node src/main.js",
+    "client": "node src/client.js"
   },
   "dependencies": {
     "zeromq": "^5.2.6",
