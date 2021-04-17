@@ -1,0 +1,14 @@
+{
+  "name": "0mq-nodejs",
+  "version": "1.0.0",
+  "main": "main.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "node src/main.js"
+  },
+  "dependencies": {
+    "zeromq": "^5.2.6",
+    "ffi": "^2.3.0",
+    "@nanometrics/pegasus-harvest-lib": "1.3.5"
+  }
+}
