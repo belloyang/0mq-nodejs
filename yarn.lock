@@ -38,6 +38,11 @@ debug@2:
   dependencies:
     ms "2.0.0"
 
+dotenv@^8.2.0:
+  version "8.2.0"
+  resolved "https://nexus.nmx.ca/repository/npm/dotenv/-/dotenv-8.2.0.tgz#97e619259ada750eea3e4ea3e26bceea5424b16a"
+  integrity sha512-8sJ78ElpbDJBHNeBzUbUVLsqKdccaa/BXF1uPTw3GrvQTBgrQrtObr2mUrE38vzYd8cEv+m/JBfDLioYcfXoaw==
+
 ffi@^2.3.0:
   version "2.3.0"
   resolved "https://nexus.nmx.ca/repository/npm/ffi/-/ffi-2.3.0.tgz#fa1a7b3d85c0fa8c83d96947a64b5192bc47f858"

@@ -1,6 +1,7 @@
 import zmq = require("zeromq");
 import { constructApiCalls } from './construct-api-calls';
 import { UpperLimit} from '@nanometrics/pegasus-harvest-lib';
+import { Port_Pubsub, Port_Reqrep } from "./share/default-ports";
 
 
 // socket to talk to server
@@ -26,8 +27,8 @@ requester.on("message", function(reply) {
     } else {
       console.log('receive msg', replyType, replyObj);
       
-      subscriber.connect('tcp://localhost:5556');
-      console.log("Subscriber connected to port 5556");
+      subscriber.connect(`tcp://localhost:${Port_Pubsub}`);
+      console.log(`Subscriber connected to port ${Port_Pubsub}`);
       subscriber.subscribe("get_op_responses");
       subscriber.on("message", function(topic, message) {
         console.log(
@@ -94,7 +95,7 @@ requester.on("message", function(reply) {
   
 });
 
-requester.connect("tcp://localhost:5555");
+requester.connect(`tcp://localhost:${Port_Reqrep}`);
 
 
 console.log("Sending request", '...');

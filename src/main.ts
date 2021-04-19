@@ -4,6 +4,7 @@
 import { HarvesterAPIs } from '@nanometrics/pegasus-harvest-lib';
 
 import zmq = require('zeromq');
+import { Port_Pubsub, Port_Reqrep } from './share/default-ports';
 
 // socket to talk to clients
 var responder = zmq.socket('rep');
@@ -85,19 +86,22 @@ responder.on('message', function(request: Buffer) {
    
 });
 
-responder.bind('tcp://*:5555', function(err: any) {
+
+
+
+responder.bind(`tcp://*:${Port_Reqrep}`, function(err: any) {
   if (err) {
     console.log(err);
   } else {
-    console.log("Listening on 5555...");
+    console.log(`Listening on ${Port_Reqrep}...`);
   }
 });
 
-publisher.bind('tcp://*:5556', function(err: any) {
+publisher.bind(`tcp://*:${Port_Pubsub}`, function(err: any) {
   if (err) {
     console.log(err);
   } else {
-    console.log("Publisher bound to port 5556");
+    console.log(`Publisher bound to port ${Port_Pubsub}`);
   }
 });
 
