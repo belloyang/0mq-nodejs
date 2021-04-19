@@ -1,6 +1,6 @@
 import zmq = require("zeromq");
 import { constructApiCalls } from './construct-api-calls';
-const { UpperLimit}=  require('@nanometrics/pegasus-harvest-lib');
+import { UpperLimit} from '@nanometrics/pegasus-harvest-lib';
 
 
 // socket to talk to server

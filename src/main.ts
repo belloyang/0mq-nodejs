@@ -3,7 +3,7 @@
 // Binds pub socket to tcp://*.5556
 import { HarvesterAPIs } from '@nanometrics/pegasus-harvest-lib';
 
-var zmq = require('zeromq');
+import zmq = require('zeromq');
 
 // socket to talk to clients
 var responder = zmq.socket('rep');
