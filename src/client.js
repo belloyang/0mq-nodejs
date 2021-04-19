@@ -1,13 +1,14 @@
 var zmq = require('zeromq');
 const { constructApiCalls } = require('./construct-api-calls');
+const { UpperLimit}=  require('@nanometrics/pegasus-harvest-lib');
+
 
 // socket to talk to server
 console.log("Connecting to hello world server...");
 var requester = zmq.socket('req');
 
-var x = 0;
+let system_path; 
 requester.on("message", function(reply) {
-  // console.log("Received reply", x, ": [", reply.toString(), ']');
   
   let replyJson = reply.toString();
   try{
@@ -39,8 +40,45 @@ requester.on("message", function(reply) {
         console.log('receive subscribed msg', replyType, replyObj.response);
         if(replyObj.response.type === 'completion') {
             subscriber.unsubscribe('get_op_responses');
-            requester.close();
-            process.exit(0); 
+            console.log('unsubscribe get_op_responses');
+            // requester.close();
+            // process.exit(0); 
+        } else if(replyObj.response.type === 'response') {
+          switch(replyObj.response.operation) {
+            case 'list_devices': { // repored as list_devices instead of list
+              console.log('receive response from list call', replyObj.response.data);
+              system_path = replyObj.response.data.system_path;
+              console.log('receive system path', system_path);
+              let harvestCall = constructApiCalls('harvest_data', [
+                system_path,
+                {
+                  range: {
+                      lower: {
+                        time_microsecs: 0
+                      },
+                      upper: {
+                        time_microsecs: UpperLimit.timestamp
+                      },
+                  },
+                  output_path: './output',
+                  output_pattern: '${N}/${S}/${S}.${N}.${J}',
+                  hours_per_file: 24,
+                },
+                0.1 //report every 10% progress
+              ], true);
+              console.log('send API call', harvestCall.call);
+              requester.send(JSON.stringify(harvestCall));
+            }break;
+            case 'harvest_data': {
+              console.log('receive response from harvest_data call', replyObj.response.data);
+
+            }break;
+            default: {
+              console.warn('receive response from unsupported call', replyObj.response.operation, replyObj.response.data);
+            }
+          }
+          
+
         }
       });
       
@@ -60,9 +98,9 @@ requester.connect("tcp://localhost:5555");
 
 console.log("Sending request", '...');
   
-  let harvestCall = constructApiCalls('list', [], true);
-  requester.send(JSON.stringify(harvestCall));
-
+let harvestCall = constructApiCalls('list', [], true);
+console.log('send API call', harvestCall.call);
+requester.send(JSON.stringify(harvestCall));
 
 
 process.on('SIGINT', function() {

@@ -7,6 +7,7 @@ var zmq = require('zeromq');
 
 // socket to talk to clients
 var responder = zmq.socket('rep');
+var publisher = zmq.socket('pub');
 
 responder.on('message', function(request) {
   console.log("Received request: [", request.toString(), "]");
@@ -41,9 +42,7 @@ responder.on('message', function(request) {
           response: null
         }
         
-        let publisher = zmq.socket('pub');
-        publisher.bindSync('tcp://*:5556');
-        console.log("Publisher bound to port 5556");
+        
         responder.send(JSON.stringify(replyObj));
         let getOPResponsePollHandle = setInterval(() => {
         let queryStr = HarvesterAPIs.get_op_responses(...msgObject['parameters']);
@@ -64,7 +63,7 @@ responder.on('message', function(request) {
             }
           } else {
             console.log('clearInterval: receive null from get_op_responses');
-            publisher.close();
+            // publisher.close();
             clearInterval(getOPResponsePollHandle);
           }
         }, 100);
@@ -91,6 +90,15 @@ responder.bind('tcp://*:5555', function(err) {
     console.log("Listening on 5555...");
   }
 });
+
+publisher.bind('tcp://*:5556', function(err) {
+  if (err) {
+    console.log(err);
+  } else {
+    console.log("Publisher bound to port 5556");
+  }
+});
+
 
 process.on('SIGINT', function() {
   responder.close();
