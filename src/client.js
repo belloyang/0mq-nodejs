@@ -1,4 +1,5 @@
 var zmq = require('zeromq');
+const { constructApiCalls } = require('./construct-api-calls');
 
 // socket to talk to server
 console.log("Connecting to hello world server...");
@@ -58,12 +59,10 @@ requester.connect("tcp://localhost:5555");
 
 
 console.log("Sending request", '...');
-  let harvestCall = {
-    call: 'list',
-    parameters: [],
-    expect_response: true
-  }
+  
+  let harvestCall = constructApiCalls('list', [], true);
   requester.send(JSON.stringify(harvestCall));
+
 
 
 process.on('SIGINT', function() {
