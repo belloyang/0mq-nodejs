@@ -1,7 +1,7 @@
 
 // Binds REP socket to tcp://*:5555
 // Binds pub socket to tcp://*.5556
-var { HarvesterAPIs }=  require('@nanometrics/pegasus-harvest-lib');
+import { HarvesterAPIs } from '@nanometrics/pegasus-harvest-lib';
 
 var zmq = require('zeromq');
 
@@ -9,7 +9,7 @@ var zmq = require('zeromq');
 var responder = zmq.socket('rep');
 var publisher = zmq.socket('pub');
 
-responder.on('message', function(request) {
+responder.on('message', function(request: Buffer) {
   console.log("Received request: [", request.toString(), "]");
 
    let msgJson = request.toString();
@@ -20,7 +20,8 @@ responder.on('message', function(request) {
     switch(msgObject.call) {
       case  'harvest_data': {
         // call harvest_data
-        let execId =  HarvesterAPIs.harvest_data(...msgObject['parameters']);
+        let params = msgObject['parameters'];
+        let execId =  HarvesterAPIs.harvest_data(params[0], params[1], params[2]);
         let replyObj = {
           type: 'ExecID',
           execId: execId
@@ -45,7 +46,8 @@ responder.on('message', function(request) {
         
         responder.send(JSON.stringify(replyObj));
         let getOPResponsePollHandle = setInterval(() => {
-        let queryStr = HarvesterAPIs.get_op_responses(...msgObject['parameters']);
+        let params = msgObject['parameters'];
+        let queryStr = HarvesterAPIs.get_op_responses(params[0], params[1]);
           if(queryStr !== null) {
             let query = JSON.parse(queryStr);
             // console.log('check query:', query);
@@ -71,7 +73,7 @@ responder.on('message', function(request) {
       }break;
       default:
         let replyObj = {
-          unsupported_call: execId
+          unsupported_call: msgObject.call
         }
         responder.send(JSON.stringify(replyObj));
 
@@ -83,7 +85,7 @@ responder.on('message', function(request) {
    
 });
 
-responder.bind('tcp://*:5555', function(err) {
+responder.bind('tcp://*:5555', function(err: any) {
   if (err) {
     console.log(err);
   } else {
@@ -91,7 +93,7 @@ responder.bind('tcp://*:5555', function(err) {
   }
 });
 
-publisher.bind('tcp://*:5556', function(err) {
+publisher.bind('tcp://*:5556', function(err: any) {
   if (err) {
     console.log(err);
   } else {

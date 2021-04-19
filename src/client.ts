@@ -1,5 +1,5 @@
-var zmq = require('zeromq');
-const { constructApiCalls } = require('./construct-api-calls');
+import zmq = require("zeromq");
+import { constructApiCalls } from './construct-api-calls';
 const { UpperLimit}=  require('@nanometrics/pegasus-harvest-lib');
 
 

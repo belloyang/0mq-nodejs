@@ -1,4 +1,4 @@
-module.exports.constructApiCalls = function(apiName, parameters, expect_response) {
+export function constructApiCalls(apiName: string, parameters: any[], expect_response: boolean) {
     const harvestCall = {
         call: apiName,
         parameters: [...parameters],
