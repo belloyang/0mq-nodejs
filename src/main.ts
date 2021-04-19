@@ -104,4 +104,5 @@ publisher.bind('tcp://*:5556', function(err: any) {
 
 process.on('SIGINT', function() {
   responder.close();
+  publisher.close();
 });

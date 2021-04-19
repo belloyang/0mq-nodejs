@@ -5,7 +5,8 @@ const { UpperLimit}=  require('@nanometrics/pegasus-harvest-lib');
 
 // socket to talk to server
 console.log("Connecting to hello world server...");
-var requester = zmq.socket('req');
+let requester = zmq.socket('req');
+let subscriber = zmq.socket('sub');
 
 let system_path; 
 requester.on("message", function(reply) {
@@ -24,7 +25,7 @@ requester.on("message", function(reply) {
       requester.send(JSON.stringify(harvestCall));
     } else {
       console.log('receive msg', replyType, replyObj);
-      let subscriber = zmq.socket('sub');
+      
       subscriber.connect('tcp://localhost:5556');
       console.log("Subscriber connected to port 5556");
       subscriber.subscribe("get_op_responses");
@@ -105,4 +106,5 @@ requester.send(JSON.stringify(harvestCall));
 
 process.on('SIGINT', function() {
   requester.close();
+  subscriber.close();
 });
