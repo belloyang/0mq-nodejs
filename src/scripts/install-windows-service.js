@@ -4,7 +4,7 @@ var Service = require('node-windows').Service;
 var svc = new Service({
   name:'Pegasus Harvester Service',
   description: 'Nanometrics Pegasus Harvester Service',
-  script: 'C:\\Users\\yangb\\workspace\\0mq-nodejs\\dist\\main.js',
+  script: require('path').join(__dirname,'../../dist/main.js'),
   nodeOptions: [
     '--harmony',
     '--max_old_space_size=4096'
