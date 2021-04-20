@@ -4,6 +4,7 @@ import { UpperLimit} from '@nanometrics/pegasus-harvest-lib';
 import { Port_Pubsub, Port_Reqrep } from "./share/default-ports";
 import { HarvestAPIParams_GetOpResponses, HarvesterAPIParams_HarvestData } from "./models/api-params";
 import { HarvesterApiCall } from "./models/harvester-api-call";
+import { HarvesterApiType } from "./models/harvester-api-type";
 
 
 // socket to talk to server
@@ -26,7 +27,7 @@ requester.on("message", function(reply) {
         exectionId: replyObj.execId,
         nResponsesMax: 0
       };
-      let harvestCall = constructApiCalls('get_op_responses', params, true);
+      let harvestCall = constructApiCalls('get_op_responses', params, HarvesterApiType.oneResponse);
 
       requester.send(JSON.stringify(harvestCall));
     } else {
@@ -73,7 +74,7 @@ requester.on("message", function(reply) {
                 },
                 updateStep: 0.1 //report every 10% progress
               }
-              let harvestCall: HarvesterApiCall = constructApiCalls('harvest_data', params, true);
+              let harvestCall: HarvesterApiCall = constructApiCalls('harvest_data', params, HarvesterApiType.withResponses);
               console.log('send API call', harvestCall.apiName);
               requester.send(JSON.stringify(harvestCall));
             }break;
@@ -106,7 +107,7 @@ requester.connect(`tcp://localhost:${Port_Reqrep}`);
 
 console.log("Sending request", '...');
   
-let harvestCall = constructApiCalls('list', {}, true);
+let harvestCall = constructApiCalls('list', {}, HarvesterApiType.withResponses);
 console.log('send API call', harvestCall.apiName);
 requester.send(JSON.stringify(harvestCall));
 

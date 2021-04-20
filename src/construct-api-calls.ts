@@ -1,11 +1,12 @@
 import { HarvestAPIParams } from "./models/api-params";
 import { HarvesterApiCall } from "./models/harvester-api-call";
+import { HarvesterApiType } from "./models/harvester-api-type";
 
-export function constructApiCalls(apiName: string, parameters: HarvestAPIParams, expect_response: boolean) {
+export function constructApiCalls(apiName: string, parameters: HarvestAPIParams, apiType: HarvesterApiType) {
     const harvestCall: HarvesterApiCall = {
         apiName: apiName,
         arguments: parameters,
-        expect_response: expect_response !== undefined ? expect_response : false
+        type: apiType
       };
 
     return harvestCall;
