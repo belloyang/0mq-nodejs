@@ -106,7 +106,7 @@ requester.connect(`tcp://localhost:${Port_Reqrep}`);
 
 console.log("Sending request", '...');
   
-let harvestCall = constructApiCalls('list', undefined, true);
+let harvestCall = constructApiCalls('list', {}, true);
 console.log('send API call', harvestCall.apiName);
 requester.send(JSON.stringify(harvestCall));
 
