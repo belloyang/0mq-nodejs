@@ -39,8 +39,12 @@ export interface HarvestAPIParams_GetOpResponses {
     exectionId: number;
     nResponsesMax: number
 }
+export interface HarvestAPIParams_Void {
+
+}
 
 export type HarvestAPIParams = HarvesterAPIParams_SetClientInfo |
                                HarvesterAPIParams_SetLogsMask |
                                HarvesterAPIParams_HarvestData |
-                               HarvestAPIParams_GetOpResponses;
+                               HarvestAPIParams_GetOpResponses |
+                               HarvestAPIParams_Void;
