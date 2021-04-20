@@ -2,6 +2,8 @@ import zmq = require("zeromq");
 import { constructApiCalls } from './construct-api-calls';
 import { UpperLimit} from '@nanometrics/pegasus-harvest-lib';
 import { Port_Pubsub, Port_Reqrep } from "./share/default-ports";
+import { HarvestAPIParams_GetOpResponses, HarvesterAPIParams_HarvestData } from "./models/api-params";
+import { HarvesterApiCall } from "./models/harvester-api-call";
 
 
 // socket to talk to server
@@ -19,10 +21,13 @@ requester.on("message", function(reply) {
     let replyType = replyObj.type;
     if(replyType === 'ExecID') {
       console.log('receive msg', replyType);
-      let harvestCall = {
-      call: 'get_op_responses',
-      parameters: [replyObj.execId, 0],
-      }
+
+      let params: HarvestAPIParams_GetOpResponses = {
+        exectionId: replyObj.execId,
+        nResponsesMax: 0
+      };
+      let harvestCall = constructApiCalls('get_op_responses', params, true);
+
       requester.send(JSON.stringify(harvestCall));
     } else {
       console.log('receive msg', replyType, replyObj);
@@ -51,9 +56,9 @@ requester.on("message", function(reply) {
               console.log('receive response from list call', replyObj.response.data);
               system_path = replyObj.response.data.system_path;
               console.log('receive system path', system_path);
-              let harvestCall = constructApiCalls('harvest_data', [
-                system_path,
-                {
+              let params: HarvesterAPIParams_HarvestData = {
+                libPath: system_path,
+                params: {
                   range: {
                       lower: {
                         time_microsecs: 0
@@ -66,9 +71,10 @@ requester.on("message", function(reply) {
                   output_pattern: '${N}/${S}/${S}.${N}.${J}',
                   hours_per_file: 24,
                 },
-                0.1 //report every 10% progress
-              ], true);
-              console.log('send API call', harvestCall.call);
+                updateStep: 0.1 //report every 10% progress
+              }
+              let harvestCall: HarvesterApiCall = constructApiCalls('harvest_data', params, true);
+              console.log('send API call', harvestCall.apiName);
               requester.send(JSON.stringify(harvestCall));
             }break;
             case 'harvest_data': {
@@ -100,8 +106,8 @@ requester.connect(`tcp://localhost:${Port_Reqrep}`);
 
 console.log("Sending request", '...');
   
-let harvestCall = constructApiCalls('list', [], true);
-console.log('send API call', harvestCall.call);
+let harvestCall = constructApiCalls('list', undefined, true);
+console.log('send API call', harvestCall.apiName);
 requester.send(JSON.stringify(harvestCall));
 
 
