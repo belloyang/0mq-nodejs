@@ -5,6 +5,7 @@ import { HarvesterAPIs } from '@nanometrics/pegasus-harvest-lib';
 
 import zmq = require('zeromq');
 import { HarvestAPIParams_GetOpResponses, HarvesterAPIParams_HarvestData } from './models/api-params';
+import { HarvesterApiCall } from './models/harvester-api-call';
 import { Port_Pubsub, Port_Reqrep } from './share/default-ports';
 
 // socket to talk to clients
@@ -16,13 +17,13 @@ responder.on('message', function(request: Buffer) {
 
    let msgJson = request.toString();
    try{
-     let msgObject = JSON.parse(msgJson);
+     let msgObject: HarvesterApiCall = JSON.parse(msgJson);
     console.log('receive JSON:', msgObject);
 
     switch(msgObject.apiName) {
       case  'harvest_data': {
         // call harvest_data
-        let params: HarvesterAPIParams_HarvestData = msgObject['arguments'];
+        let params: HarvesterAPIParams_HarvestData = msgObject.arguments as HarvesterAPIParams_HarvestData;
         let execId =  HarvesterAPIs.harvest_data(params.libPath, params.params, params.updateStep);
         let replyObj = {
           type: 'ExecID',
@@ -48,7 +49,7 @@ responder.on('message', function(request: Buffer) {
         
         responder.send(JSON.stringify(replyObj));
         let getOPResponsePollHandle = setInterval(() => {
-        let params: HarvestAPIParams_GetOpResponses = msgObject['arguments'];
+        let params: HarvestAPIParams_GetOpResponses = msgObject.arguments as HarvestAPIParams_GetOpResponses;
         let queryStr = HarvesterAPIs.get_op_responses(params.exectionId, params.nResponsesMax);
           if(queryStr !== null) {
             let query = JSON.parse(queryStr);
