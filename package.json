@@ -8,6 +8,7 @@
     "start": "yarn build && node dist/main.js",
     "server": "node dist/main.js",
     "client": "node dist/client.js",
+    "new-client": "node dist/new-client.js",
     "install:windows-service": "node ./src/scripts/install-windows-service.js",
     "uninstall:windows-service": "node ./src/scripts/uninstall-windows-service.js"
   },
