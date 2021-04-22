@@ -27,29 +27,34 @@ responder.on('message', function(request: Buffer) {
         let execId =  HarvesterAPIs.harvest_data(params.libPath, params.params, params.updateStep);
         let replyObj = {
           type: 'ExecID',
-          execId: execId
+          execId: execId,
+          apiName: msgObject.apiName,
         }
+        console.log('send ExecID for harvest_data', replyObj);
         responder.send(JSON.stringify(replyObj));
       }break;
       case 'list': {
         let execId = HarvesterAPIs.list();
         let replyObj = {
           type: 'ExecID',
-          execId: execId
+          execId: execId,
+          apiName: msgObject.apiName,
         }
         console.log('server: send reply from call: list', replyObj);
         responder.send(JSON.stringify(replyObj));
       }break;
       case 'get_op_responses': {
+        let params: HarvestAPIParams_GetOpResponses = msgObject.arguments as HarvestAPIParams_GetOpResponses;
         let replyObj = {
           type: 'Response',
+          execId: params.exectionId,
           response: null
         }
         
         
         responder.send(JSON.stringify(replyObj));
         let getOPResponsePollHandle = setInterval(() => {
-        let params: HarvestAPIParams_GetOpResponses = msgObject.arguments as HarvestAPIParams_GetOpResponses;
+        
         let queryStr = HarvesterAPIs.get_op_responses(params.exectionId, params.nResponsesMax);
           if(queryStr !== null) {
             let query = JSON.parse(queryStr);
@@ -60,10 +65,10 @@ responder.on('message', function(request: Buffer) {
               type: 'Response',
               response: JSON.parse(responseStr)
               }
-              
-                console.log('server: SEND reply from call: get_op_responses', replyObj);
+                let topic = 'get_op_responses'+ params.exectionId;
+                console.log(`server: publishes to topic : ${topic}`, replyObj);
                 
-                publisher.send(['get_op_responses', JSON.stringify(replyObj)]);
+                publisher.send([topic, JSON.stringify(replyObj)]);
 
             }
           } else {

@@ -96,6 +96,8 @@ requester.on("message", function(reply) {
     
   }catch(e) {
     console.error('failed to parse replyJson', replyJson, e);
+    requester.close();
+    subscriber.close();
   }
   
   
