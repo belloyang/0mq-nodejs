@@ -58,6 +58,10 @@ responder.on('message', function(request: Buffer) {
                     (replyMsg.payload as CmdReplyPayload).reply = HarvesterAPIs.harvest_data(args.libPath, args.params, args.updateStep);
                     responder.send(JSON.stringify(replyMsg));
                 }break;
+                case 'reset': {
+                    HarvesterAPIs.reset();
+                    responder.send(JSON.stringify(replyMsg));
+                }break;
                 default: {
                     console.error('unrecognized API name:', payload.apiName);
                     responder.send(JSON.stringify(replyMsg));

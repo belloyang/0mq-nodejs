@@ -46,3 +46,7 @@ harvesterClientAgent.ExecHarvestCmd('list', {}, true, (execId, response) => {
     }
     
 });
+
+harvesterClientAgent.ExecHarvestCmd('reset', {}, false, (ret) => {
+    console.log('client execute reset', ret);
+})
