@@ -1,4 +1,6 @@
-import zmq = require("zeromq");
+// import zmq = require("zeromq");
+import * as zmq from "zeromq/v5-compat";
+
 import { constructApiCalls } from './construct-api-calls';
 import { UpperLimit} from '@nanometrics/pegasus-harvest-lib';
 import { Port_Pubsub, Port_Reqrep } from "./share/default-ports";
@@ -29,7 +31,7 @@ requester.on("message", function(reply) {
       };
       let harvestCall = constructApiCalls('get_op_responses', params, HarvesterApiType.oneResponse);
 
-      requester.send(JSON.stringify(harvestCall));
+      requester.send([JSON.stringify(harvestCall)]);
     } else {
       console.log('receive msg', replyType, replyObj);
       
@@ -76,7 +78,7 @@ requester.on("message", function(reply) {
               }
               let harvestCall: HarvesterApiCall = constructApiCalls('harvest_data', params, HarvesterApiType.withResponses);
               console.log('send API call', harvestCall.apiName);
-              requester.send(JSON.stringify(harvestCall));
+              requester.send([JSON.stringify(harvestCall)]);
             }break;
             case 'harvest_data': {
               console.log('receive response from harvest_data call', replyObj.response.data);
@@ -111,7 +113,7 @@ console.log("Sending request", '...');
   
 let harvestCall = constructApiCalls('list', {}, HarvesterApiType.withResponses);
 console.log('send API call', harvestCall.apiName);
-requester.send(JSON.stringify(harvestCall));
+requester.send([JSON.stringify(harvestCall)]);
 
 
 process.on('SIGINT', function() {

@@ -1,6 +1,8 @@
 import { GenericOpResponse, HarvesterOpResponseType } from "@nanometrics/pegasus-harvest-lib";
 import { Subject } from "rxjs";
-import zmq = require("zeromq");
+// import zmq = require("zeromq");
+import * as zmq from "zeromq/v5-compat";
+
 import { constructApiCalls } from "./construct-api-calls";
 import { HarvestAPIParams, HarvestAPIParams_GetOpResponses } from "./models/api-params";
 import { HarvesterApiType } from "./models/harvester-api-type";
@@ -43,7 +45,7 @@ export class HarvesterClientAgent {
                                     execId: execId
                                 }
                             };
-                            this.requester.send(JSON.stringify(subRequestMsg));
+                            this.requester.send([JSON.stringify(subRequestMsg)]);
                             callback(execId, cmdResponse$);
                             //subscribe to the topic
                             this.subscriber.connect(`tcp://localhost:${Port_Pubsub}`);
@@ -109,7 +111,7 @@ export class HarvesterClientAgent {
             }
         }
         console.log('ExecHarvestCmd: send API call', apiName);
-        this.requester.send(JSON.stringify(cmdRequestMsg));
+        this.requester.send([JSON.stringify(cmdRequestMsg)]);
 
         process.on('SIGINT', function() {
             _this.close();

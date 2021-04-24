@@ -64,12 +64,12 @@ ms@2.0.0:
   resolved "https://nexus.nmx.ca/repository/npm/ms/-/ms-2.0.0.tgz#5608aeadfc00be6c2901df5f9861788de0d597c8"
   integrity sha1-VgiurfwAvmwpAd9fmGF4jeDVl8g=
 
-nan@2, nan@2.14.2:
+nan@2:
   version "2.14.2"
   resolved "https://nexus.nmx.ca/repository/npm/nan/-/nan-2.14.2.tgz#f5376400695168f4cc694ac9393d0c9585eeea19"
   integrity sha512-M2ufzIiINKCuDfBSAUr1vWQ+vuVcA9kqx8JJUsbQi6yf1uGRyb7HfpdfUr5qLXf3B/t8dPvcjhKMmlfnP47EzQ==
 
-node-gyp-build@^4.2.3:
+node-gyp-build@^4.1.0:
   version "4.2.3"
   resolved "https://nexus.nmx.ca/repository/npm/node-gyp-build/-/node-gyp-build-4.2.3.tgz#ce6277f853835f718829efb47db20f3e4d9c4739"
   integrity sha512-MN6ZpzmfNCRM+3t57PTJHgHyw/h4OWnZ6mR8P5j/uZtqQr46RRuDE/P+g3n0YR/AiYXeWixZZzaip77gdICfRg==
@@ -108,10 +108,9 @@ typescript@^4.2.4:
   resolved "https://nexus.nmx.ca/repository/npm/typescript/-/typescript-4.2.4.tgz#8610b59747de028fda898a8aef0e103f156d0961"
   integrity sha512-V+evlYHZnQkaz8TRBuxTA92yZBPotr5H+WhQ7bD3hZUndx5tGOa1fuCgeSjxAzM1RiN5IzvadIXTVefuuwZCRg==
 
-zeromq@^5.2.6:
-  version "5.2.6"
-  resolved "https://nexus.nmx.ca/repository/npm/zeromq/-/zeromq-5.2.6.tgz#3cf593b38ed5bfaeb5b6684bc0f83d0e319e1800"
-  integrity sha512-ZDvzCauSNBrcs05w3oMhVuxG9V8+/NxGBek2fbBVNmuDB/Dk7+pBiogf1WsP1yUw+eQQzwc1smYSG682nA4jzw==
+zeromq@^6.0.0-beta.6:
+  version "6.0.0-beta.6"
+  resolved "https://nexus.nmx.ca/repository/npm/zeromq/-/zeromq-6.0.0-beta.6.tgz#2b8934cafce735ea9007fd3074ec8aca9bf11204"
+  integrity sha512-wLf6M7pBHijl+BRltUL2VoDpgbQcOZetiX8UzycHL8CcYFxYnRrpoG5fi3UX3+Umavz1lk4/dGaQez8qiDgr/Q==
   dependencies:
-    nan "2.14.2"
-    node-gyp-build "^4.2.3"
+    node-gyp-build "^4.1.0"

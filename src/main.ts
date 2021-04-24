@@ -2,15 +2,15 @@
 // Binds REP socket to tcp://*:5555
 // Binds pub socket to tcp://*.5556
 import { HarvesterAPIs } from '@nanometrics/pegasus-harvest-lib';
-
-import zmq = require('zeromq');
+// import * as zmq from 'zeromq';
+import * as zmq from "zeromq/v5-compat";
 import { HarvestAPIParams_GetOpResponses, HarvesterAPIParams_HarvestData } from './models/api-params';
 import { HarvesterApiCall } from './models/harvester-api-call';
 import { Port_Pubsub, Port_Reqrep } from './share/default-ports';
 
 // socket to talk to clients
-var responder = zmq.socket('rep');
-var publisher = zmq.socket('pub');
+var responder =  zmq.socket('rep');
+var publisher =  zmq.socket('pub');
 
 responder.on('message', function(request: Buffer) {
   console.log("Received request: [", request.toString(), "]");
@@ -31,7 +31,7 @@ responder.on('message', function(request: Buffer) {
           apiName: msgObject.apiName,
         }
         console.log('send ExecID for harvest_data', replyObj);
-        responder.send(JSON.stringify(replyObj));
+        responder.send([JSON.stringify(replyObj)]);
       }break;
       case 'list': {
         let execId = HarvesterAPIs.list();
@@ -41,7 +41,7 @@ responder.on('message', function(request: Buffer) {
           apiName: msgObject.apiName,
         }
         console.log('server: send reply from call: list', replyObj);
-        responder.send(JSON.stringify(replyObj));
+        responder.send([JSON.stringify(replyObj)]);
       }break;
       case 'get_op_responses': {
         let params: HarvestAPIParams_GetOpResponses = msgObject.arguments as HarvestAPIParams_GetOpResponses;
@@ -52,7 +52,7 @@ responder.on('message', function(request: Buffer) {
         }
         
         
-        responder.send(JSON.stringify(replyObj));
+        responder.send([JSON.stringify(replyObj)]);
         let getOPResponsePollHandle = setInterval(() => {
         
         let queryStr = HarvesterAPIs.get_op_responses(params.exectionId, params.nResponsesMax);
@@ -83,7 +83,7 @@ responder.on('message', function(request: Buffer) {
         let replyObj = {
           unsupported_call: msgObject.apiName
         }
-        responder.send(JSON.stringify(replyObj));
+        responder.send([JSON.stringify(replyObj)]);
 
     }
 

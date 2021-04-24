@@ -1,6 +1,7 @@
 import { GenericOpResponse, HarvesterAPIs } from '@nanometrics/pegasus-harvest-lib';
 
-import zmq = require('zeromq');
+// import zmq = require('zeromq');
+import * as zmq from "zeromq/v5-compat";
 import { HarvestAPIParams_GetOpResponses, HarvesterAPIParams_HarvestData } from './models/api-params';
 import { HarvesterApiCall } from './models/harvester-api-call';
 import { CmdReplyPayload, CmdRequestPayload, SubReplyPayload } from './models/zmp-msg-payload';
@@ -51,20 +52,20 @@ responder.on('message', function(request: Buffer) {
             switch(payload.apiName) {
                 case 'list': {
                     (replyMsg.payload as CmdReplyPayload).reply = HarvesterAPIs.list();
-                    responder.send(JSON.stringify(replyMsg));
+                    responder.send([JSON.stringify(replyMsg)]);
                 }break;
                 case 'harvest_data': {
                     let args: HarvesterAPIParams_HarvestData = payload.arguments as HarvesterAPIParams_HarvestData;
                     (replyMsg.payload as CmdReplyPayload).reply = HarvesterAPIs.harvest_data(args.libPath, args.params, args.updateStep);
-                    responder.send(JSON.stringify(replyMsg));
+                    responder.send([JSON.stringify(replyMsg)]);
                 }break;
                 case 'reset': {
                     HarvesterAPIs.reset();
-                    responder.send(JSON.stringify(replyMsg));
+                    responder.send([JSON.stringify(replyMsg)]);
                 }break;
                 default: {
                     console.error('unrecognized API name:', payload.apiName);
-                    responder.send(JSON.stringify(replyMsg));
+                    responder.send([JSON.stringify(replyMsg)]);
                 }
             }
         } else if(zmqMsg.type == ZeromqMessageType.subRequest) {
@@ -77,7 +78,7 @@ responder.on('message', function(request: Buffer) {
                     execId: payload.execId,
                 }
             }
-            responder.send(JSON.stringify(replyMsg));
+            responder.send([JSON.stringify(replyMsg)]);
             let getOPResponsePollHandle = setInterval(() => {
         
                 let queryStr = HarvesterAPIs.get_op_responses(payload.execId, 0);
@@ -112,7 +113,7 @@ responder.on('message', function(request: Buffer) {
                     reply: undefined,
                 }
             };
-            responder.send(JSON.stringify(replyMsg));
+            responder.send([JSON.stringify(replyMsg)]);
         }
 
     }catch(e) {

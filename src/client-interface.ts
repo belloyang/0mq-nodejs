@@ -1,4 +1,6 @@
-import zmq = require("zeromq");
+// import zmq = require("zeromq");
+import * as zmq from "zeromq/v5-compat";
+
 import { constructApiCalls } from './construct-api-calls';
 import { Port_Pubsub, Port_Reqrep } from "./share/default-ports";
 import { HarvestAPIParams, HarvestAPIParams_GetOpResponses, HarvesterAPIParams_HarvestData } from "./models/api-params";
@@ -24,7 +26,7 @@ export function ExecHarvestCmd(apiName: string, parameters: HarvestAPIParams,
                   };
                   let harvestCall = constructApiCalls('get_op_responses', params, HarvesterApiType.oneResponse);
             
-                  requester.send(JSON.stringify(harvestCall));
+                  requester.send([JSON.stringify(harvestCall)]);
             } else {
                 console.log('receive msg', replyJson);
                 
@@ -62,7 +64,7 @@ export function ExecHarvestCmd(apiName: string, parameters: HarvestAPIParams,
 
     let harvestCall = constructApiCalls(apiName, parameters, HarvesterApiType.withResponses);
     console.log('send API call', harvestCall.apiName);
-    requester.send(JSON.stringify(harvestCall));
+    requester.send([JSON.stringify(harvestCall)]);
 
     process.on('SIGINT', function() {
         requester.close();
