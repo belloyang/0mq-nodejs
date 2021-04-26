@@ -22,7 +22,7 @@ export class HarvesterClientAgent {
     }
 
     ExecHarvestCmd(apiName: string, parameters: HarvestAPIParams, expectResponses: boolean,
-        callback: (returnValue: number|boolean| undefined, responseObservable?: Subject<any>) => void): void {
+        callback: (returnValue: number|boolean| string | undefined, responseObservable?: Subject<any>) => void): void {
         let cmdResponse$: Subject<GenericOpResponse> = new Subject();
         const _this = this;
         
@@ -118,7 +118,7 @@ export class HarvesterClientAgent {
         });
     }
 
-    ExecHarvestCmdAsync(apiName: string, parameters: HarvestAPIParams, expectResponses: boolean): Promise<[number|boolean | undefined, Subject<GenericOpResponse>|undefined]> {
+    ExecHarvestCmdAsync(apiName: string, parameters: HarvestAPIParams, expectResponses: boolean): Promise<[number|boolean |string | undefined, Subject<GenericOpResponse>|undefined]> {
         let cmdResponse$: Subject<GenericOpResponse> = new Subject();
         const _this = this;
 

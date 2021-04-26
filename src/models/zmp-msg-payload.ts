@@ -24,7 +24,7 @@ export interface CmdRequestPayload {
 }
 export interface CmdReplyPayload {
     apiName: string;
-    reply: number| boolean| undefined;
+    reply: number| boolean| string | undefined;
 
 }
 

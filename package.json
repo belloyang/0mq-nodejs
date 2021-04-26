@@ -10,6 +10,8 @@
     "client": "node dist/client.js",
     "new-client": "node dist/new-client.js",
     "new-server": "node dist/new-server.js",
+    "server:proxy": "node dist/proxy/server.js",
+    "client:proxy": "node dist/proxy/client.js",
     "install:windows-service": "node ./src/scripts/install-windows-service.js",
     "uninstall:windows-service": "node ./src/scripts/uninstall-windows-service.js"
   },
