@@ -3,6 +3,7 @@ import { Subject } from 'rxjs';
 
 import { HarvesterAPIParams_HarvestData } from './models/api-params';
 import { HarvesterClientAgent } from './harvester-client-agent';
+import { HarvesterApiAgent } from './harvester-api-agent';
 
 console.log('calling ExecHarvestCmd from new client');
 
@@ -53,7 +54,8 @@ let harvesterClientAgent: HarvesterClientAgent = new HarvesterClientAgent();
 // });
 
 // calling ExecHarvestCmdAsync
-harvesterClientAgent.ExecHarvestCmdAsync('list', {}, true).then(
+let harvesterApiAgent = new HarvesterApiAgent('list');
+harvesterApiAgent.execCommand( {}, true).then(
         ([execId, responseSubject]) => {
             console.log('client execute list returning execId', execId);
             responseSubject && responseSubject.subscribe((response) => {
@@ -78,7 +80,8 @@ harvesterClientAgent.ExecHarvestCmdAsync('list', {}, true).then(
                         updateStep: 0.1 //report every 10% progress
                       }
                       console.log('***new-client: call harvest_data', params);
-                    harvesterClientAgent.ExecHarvestCmdAsync('harvest_data', params, true).then(
+                      let harvesterData = new HarvesterApiAgent('harvest_data');
+                      harvesterData.execCommand( params, true).then(
                         ([execId, responseSubject]) => {
                             console.log('***new-client: harvest_data returns execId', execId);
                             responseSubject && responseSubject.subscribe((resp: GenericOpResponse)=> {
@@ -92,8 +95,8 @@ harvesterClientAgent.ExecHarvestCmdAsync('list', {}, true).then(
         }
 );
     
-
-harvesterClientAgent.ExecHarvestCmdAsync('reset', {}, false).then(
+let harvesterReset = new HarvesterApiAgent('reset');
+harvesterReset.execCommand( {}, false).then(
         ([ret]) => {
            console.log('client execute reset returning', ret);   
         }
