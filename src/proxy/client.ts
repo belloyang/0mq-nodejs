@@ -3,22 +3,21 @@ import { Subject } from 'rxjs';
 
 import { HarvesterAPIParams_HarvestData } from '../models/api-params';
 import { HarvesterClientAgent } from '../harvester-client-agent';
+import { HarvesterApiAgent } from '../harvester-api-agent';
 
 console.log('calling ExecHarvestCmd from new client');
 
 let responseSubject: Subject<GenericOpResponse> | undefined;
-let harvesterClientAgent: HarvesterClientAgent = new HarvesterClientAgent();
-
-// let harvesterClientAgent2: HarvesterClientAgent = new HarvesterClientAgent();
-
 
 
 async function list(): Promise<number> {
-    const [execId] =  await harvesterClientAgent.ExecHarvestCmdAsync('list', {}, false);
+    let harvesterApiAgent = new HarvesterApiAgent('list');
+    const [execId] =  await harvesterApiAgent.execCommand({}, false);
     return execId as number;
 }
 async function getOpResponses(execId: number) {
-    let [queryStr] = await harvesterClientAgent.ExecHarvestCmdAsync('get_op_responses', {exectionId: execId, nResponsesMax: 0}, false);
+    let harvesterApiAgent = new HarvesterApiAgent('get_op_responses');
+    let [queryStr] = await harvesterApiAgent.execCommand({exectionId: execId, nResponsesMax: 0}, false);
     return JSON.parse(queryStr as string);
 }
 async function runClient() {
